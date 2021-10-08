@@ -1,13 +1,14 @@
 package erc721
 
 import (
-	"context"
 	"encoding/hex"
 	"encoding/json"
 	"math/big"
+
+	"github.com/rmanzoku/go-erc721/bind"
 )
 
-func (e *ERC721) TokenURI(ctx context.Context, tokenId *big.Int) (string, error) {
+func (e *ERC721) TokenURI(opts *bind.CallOpts, tokenId *big.Int) (string, error) {
 	buf := make([]byte, 32)
 	tokenId.FillBytes(buf)
 	data := "0x" + "c87b56dd" + hex.EncodeToString(buf)
@@ -26,7 +27,7 @@ func (e *ERC721) TokenURI(ctx context.Context, tokenId *big.Int) (string, error)
 	}
 	latest, _ := json.Marshal("latest")
 
-	result, err := e.call(ctx, "eth_call", []json.RawMessage{param, latest})
+	result, err := e.call(opts, []json.RawMessage{param, latest})
 	if err != nil {
 		return "", err
 	}

@@ -2,11 +2,12 @@ package erc721
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/rmanzoku/go-erc721/bind"
 )
 
 type ERC721 struct {
@@ -35,10 +36,10 @@ type rpcResponce struct {
 	} `json:"error,omitempty"`
 }
 
-func (e *ERC721) call(ctx context.Context, method string, params []json.RawMessage) (string, error) {
+func (e *ERC721) call(opts *bind.CallOpts, params []json.RawMessage) (string, error) {
 	in := &rpcRequest{
 		JsonRPC: "2.0",
-		Method:  method,
+		Method:  "eth_call",
 		Params:  params,
 		ID:      1010101,
 	}
@@ -47,7 +48,7 @@ func (e *ERC721) call(ctx context.Context, method string, params []json.RawMessa
 		return "", err
 	}
 
-	req, err := http.NewRequestWithContext(ctx, "POST", e.rpc, bytes.NewReader(input))
+	req, err := http.NewRequestWithContext(opts.Context, "POST", e.rpc, bytes.NewReader(input))
 	if err != nil {
 		return "", err
 	}

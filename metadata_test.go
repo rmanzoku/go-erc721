@@ -4,6 +4,8 @@ import (
 	"context"
 	"math/big"
 	"testing"
+
+	"github.com/rmanzoku/go-erc721/bind"
 )
 
 func TestTokenURI(t *testing.T) {
@@ -26,8 +28,9 @@ func TestTokenURI(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ctx := context.TODO()
-			got, err := e.TokenURI(ctx, tt.args.tokenId)
+			opts := *&bind.CallOpts{Context: context.TODO()}
+
+			got, err := e.TokenURI(&opts, tt.args.tokenId)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ERC721.TokenURI() error = %v, wantErr %v", err, tt.wantErr)
 				return
